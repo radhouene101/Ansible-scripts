@@ -9,3 +9,9 @@ ansible all --list-hosts
 ansible all -m  gather_facts
 #output all information about specific host
 ansible all -m gather_facts --limit 192.168.30.164
+#to run any priveleged command we use --become 
+#and --ask-become pass for pass promt
+ansible all -m apt -a update_cache=true --become --ask-become-pass
+#install specific package in this case it's vim-nox
+ansible all -m apt -a name=vim-now --become --ask-become-pass
+
