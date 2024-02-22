@@ -14,4 +14,9 @@ ansible all -m gather_facts --limit 192.168.30.164
 ansible all -m apt -a update_cache=true --become --ask-become-pass
 #install specific package in this case it's vim-nox
 ansible all -m apt -a name=vim-now --become --ask-become-pass
+#to install with more than one argument at a time we double "" 
+#after the -a arguments flag 
+ansible all -m apt -a "name=snapd state=latest" --become --ask-become-pass
+# upgrade example
+ansible all -m apt -a "upgrade=dist" --become --ask-become-pass
 
