@@ -1,0 +1,11 @@
+# what this basically does is ping other nodes through connecting to them with ssh using the path for ssh file that we specified 
+#and -i for inventory and -m is specifying that we're using module ping
+ansible all --key-file ~/.ssh/ansible -i inventory -m ping
+
+# to list all hosts
+ansible all --list-hosts
+
+#output all the system information for all hosts
+ansible all -m  gather_facts
+#output all information about specific host
+ansible all -m gather_facts --limit 192.168.30.164
