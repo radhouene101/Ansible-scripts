@@ -5,20 +5,56 @@
   - name: install nano text editor on both servers
     apt:
       name: nano
+    when: ansible_distribution in ["Ubuntu","Debian"]
 
   - name: installing net-tools
     apt:
       name: net-tools
       state: latest
+    when: ansible_distribution == "Ubuntu"
+
   - name: updating repository index
     apt:
       update_cache: yes
+    when: ansible_distribution == "Ubuntu"
 
   - name: install apache2 package
     apt:
       name: apache2 
       state: latest
+    when: ansible_distribution == "Ubuntu"
+
   - name: add php support for apache
     apt:
       name: libapache2-mod-php
       state: latest
+    when: ansible_distribution == "Ubuntu"
+
+
+  - name: install nano text editor on both servers
+    dnf:
+      name: nano
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: installing net-tools
+    dnf:
+      name: net-tools
+      state: latest
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: updating repository index
+    dnf:
+      update_cache: yes
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: install apache2 package
+    dnf:
+      name: httpd 
+      state: latest
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: add php support for apache
+    dnf:
+      name: php
+      state: latest
+    when: ansible_distribution == "AlmaLinux"
