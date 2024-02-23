@@ -19,4 +19,5 @@ ansible all -m apt -a name=vim-now --become --ask-become-pass
 ansible all -m apt -a "name=snapd state=latest" --become --ask-become-pass
 # upgrade example
 ansible all -m apt -a "upgrade=dist" --become --ask-become-pass
-
+# to run a playbook that contains root priveleges
+ansible-playbook  --ask-become-pass nameOfPlaybook.yml

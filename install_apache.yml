@@ -1,0 +1,24 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: install nano text editor on both servers
+    apt:
+      name: nano
+
+  - name: installing net-tools
+    apt:
+      name: net-tools
+      state: latest
+  - name: updating repository index
+    apt:
+      update_cache: yes
+
+  - name: install apache2 package
+    apt:
+      name: apache2 
+      state: latest
+  - name: add php support for apache
+    apt:
+      name: libapache2-mod-php
+      state: latest
