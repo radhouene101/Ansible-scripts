@@ -4,10 +4,14 @@
   tasks:
   - name: install nano text editor and net-tools  on Ubuntu
     apt:
+<<<<<<< HEAD
       name: 
         - nano
         - net-tools
     when: ansible_distribution in ["Ubuntu","Debian"]
+=======
+      name: nano
+>>>>>>> parent of 4a4a9de (added plays for rhel distribution and when for them)
 
   - name: install apache2 and php  packages for Ubuntu
     apt:
@@ -15,9 +19,14 @@
         - apache2 
         - libapache2-mod-php
       state: latest
+<<<<<<< HEAD
+=======
+  - name: updating repository index
+    apt:
+>>>>>>> parent of 4a4a9de (added plays for rhel distribution and when for them)
       update_cache: yes
-    when: ansible_distribution == "Ubuntu"
 
+<<<<<<< HEAD
   - name: install nano text editor and net-tools on AlmaLinux
     dnf:
       name: 
@@ -33,3 +42,13 @@
       state: latest
       update_cache: yes
     when: ansible_distribution == "AlmaLinux"
+=======
+  - name: install apache2 package
+    apt:
+      name: apache2 
+      state: latest
+  - name: add php support for apache
+    apt:
+      name: libapache2-mod-php
+      state: latest
+>>>>>>> parent of 4a4a9de (added plays for rhel distribution and when for them)
