@@ -1,0 +1,15 @@
+---
+- hosts: all
+  become: true
+  tasks:
+
+  - name: install apache2 and php and nano and net-tools  packages
+    package:
+      name: 
+        - "{{ apache_package }}"
+        - "{{ php_package  }}"
+        - "{{ nano_package }}"
+        - "{{ net_tools_package }}"
+      state: latest
+      update_cache: yes
+
