@@ -39,3 +39,25 @@
         - net-tools
       state: latest
     when: ansible_distribution == "AlmaLinux"
+- hosts: db_server
+  become: true
+  tasks:
+  
+  - name: install mariadb package(AlmaLinux)
+    dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: install mariadb packkage (Ubuntu)
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+- hosts: file_servers
+  become: true
+  tasks:
+  - name: installing samba on (File_Servers)
+    package:
+      name: samba
+      state: latest

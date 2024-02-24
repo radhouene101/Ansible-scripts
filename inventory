@@ -1,5 +1,9 @@
 [web_servers]
+#almalinux
 192.168.30.167
 [db_server]
+#ubuntu
 192.168.30.148
+192.168.30.166
+[file_servers]
 192.168.30.166
