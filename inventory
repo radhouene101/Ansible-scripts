@@ -1,3 +1,9 @@
-192.168.30.148 apache_package=apache2  php_package=libapache2-mod-php  nano_package=nano  net_tools_package=net-tools 
-192.168.30.166 apache_package=apache2  php_package=libapache2-mod-php  nano_package=nano  net_tools_package=net-tools
-192.168.30.167 apache_package=httpd  php_package=php  nano_package=nano  net_tools_package=net-tools
+[web_servers]
+#almalinux
+192.168.30.167
+[db_server]
+#ubuntu
+192.168.30.148
+192.168.30.166
+[file_servers]
+192.168.30.166

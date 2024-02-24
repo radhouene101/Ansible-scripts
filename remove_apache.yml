@@ -2,23 +2,11 @@
 - hosts: all
   become: true
   tasks:
-  - name: deleting nano text editor on both servers
-    apt:
-      name: nano
-      state: absent
-  - name: deleting net-tools
-    apt:
-      name: net-tools
-      state: absent
-  - name: updating repository index
-    apt:
-      update_cache: yes
-
-  - name: deleting apache2 package
-    apt:
-      name: apache2 
-      state: absent
-  - name: deleting php support for apache
-    apt:
-      name: libapache2-mod-php
+  - name: deleting nano text editor  and net-tools nad apache and php 
+    package:
+      name: 
+        - "{{ apache_package }}"
+        - "{{ php_package  }}"
+        - "{{ nano_package }}"
+        - "{{ net_tools_package }}"
       state: absent
