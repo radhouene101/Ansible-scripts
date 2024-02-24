@@ -1,0 +1,2 @@
+#by default rhel block trafic for http so we add the rule as follows
+firewall-cmd --add-port=80/tcp
