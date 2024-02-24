@@ -16,7 +16,17 @@
       update_only: yes
       update_cache: yes
     when: ansible_distribution == "AlmaLinux"
-  
+
+- hosts: all
+  become: true
+  tasks:
+  - name: creating user moudir to all hosts
+    tags: always
+    user:
+      name: moudir
+      group: root
+
+
 - hosts: web_servers
   become: true
   tasks:
