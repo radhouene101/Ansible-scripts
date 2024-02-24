@@ -21,3 +21,7 @@ ansible all -m apt -a "name=snapd state=latest" --become --ask-become-pass
 ansible all -m apt -a "upgrade=dist" --become --ask-become-pass
 # to run a playbook that contains root priveleges
 ansible-playbook  --ask-become-pass nameOfPlaybook.yml
+#to list all tags in specific playbook in our case the playbook is site.yml
+ansible-playbook --list-tags site.yml
+#to run tasks that contains specific tag in our case the tag name is ubuntu
+ansible-playbook --tags ubuntu --ask-become-pass site.yml 

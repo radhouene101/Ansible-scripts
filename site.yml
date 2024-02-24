@@ -1,15 +1,17 @@
 ---
 - hosts: all
   become: true
-  tasks:
+  pre_tasks:
 
   - name: installing updates (Ubuntu)
+    tags: always
     apt:
       upgrade: dist
       update_cache: yes
     when: ansible_distribution == "Ubuntu"
 
   - name: installing updates (AlmaLinux)
+    tags: always
     dnf:
       update_only: yes
       update_cache: yes
@@ -20,6 +22,7 @@
   tasks:
 
   - name: installing nano and net-tools and apache2 and php and updating cache on Ubuntu
+    tags: ubuntu,apache,nano,php,net-tools
     apt:
       name:
         - nano
@@ -31,6 +34,7 @@
 
 
   - name: install apache2 and php and nano and net-tools packages on AlmaLinux
+    tags: almalinux,apache,php,net-tools,nano
     dnf:
       name: 
         - httpd 
@@ -44,20 +48,24 @@
   tasks:
   
   - name: install mariadb package(AlmaLinux)
+    tags: mariadb,almalinux
     dnf:
       name: mariadb
       state: latest
     when: ansible_distribution == "AlmaLinux"
 
   - name: install mariadb packkage (Ubuntu)
+    tags: mariadb,ubuntu
     apt:
       name: mariadb-server
       state: latest
     when: ansible_distribution == "Ubuntu"
+
 - hosts: file_servers
   become: true
   tasks:
   - name: installing samba on (File_Servers)
+    tags: samba
     package:
       name: samba
       state: latest
