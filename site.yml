@@ -44,6 +44,30 @@
       state: latest
     when: ansible_distribution == "AlmaLinux"
 
+  - name: start httpd (AlmaLinux)
+    tags: apache,almalinux,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: change email address for admin
+    tags: apache,httpd,AlmaLinux
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regex: '^ServerAdmin'
+      line: ServerAdmin somebody@moudir.com
+    when: ansible_distribution == "AlmaLinux"
+    register: httpd
+#register is a variable where we saved the play
+  - name: restart httpd (AlmaLinux)
+    tags: apache,AlmaLinux,httpd
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+
   - name: copy default html file for site
     tags: apache,php,httpd
     copy:
