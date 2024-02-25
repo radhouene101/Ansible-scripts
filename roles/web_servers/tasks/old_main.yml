@@ -20,12 +20,16 @@
   lineinfile:
       path: /etc/httpd/conf/httpd.conf
       regex: '^ServerAdmin'
-      line: ServerAdmin somebod@moudir.com
+      line: ServerAdmin somebody@moudir.com
   when: ansible_distribution == "AlmaLinux"
-  notify: restart_apache
-
+  register: apache
 #register is a variable where we saved the play
-
+- name: restart httpd (AlmaLinux)
+  tags: apache,AlmaLinux,httpd
+  service:
+      name: "{{ apache_service}}"
+      state: restarted
+  when: apache.changed
 
 - name: copy default html file for site
   tags: apache,php,httpd
