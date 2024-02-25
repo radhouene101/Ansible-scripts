@@ -1,0 +1,46 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: installing updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: installing updates (AlmaLinux)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "AlmaLinux"
+
+- hosts: all
+  become: true
+  tasks:
+
+
+  - name: creating user moudir to all hosts
+    tags: always
+    user:
+      name: moudir
+      groups: root
+
+
+  - name: add ssh key for moudir
+    tags: always
+    authorized_key:
+         user: moudir
+         key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCoAY4MOVeABgzCzTHLyOCAXjFhQwzb+GxoHpPxrQn4U1495Y4TkmFbZPIVzCMoz7g3uf9U2UJmvpllDTxngG5e69X1dtCZM9M7NlvTnOSck1SFygag5ffysQ60HwuQerR7VXpYG+3tWeP/WNDpRZTyEl2e27DzrYmXU/alH0tknvLeTuMhld6UjLC9VA5qzlXGKC96tGcc20+SMQi/xARBwuSWesSiU7vGERAD6ntdpmGDjJmwzQuw7qJvd2IIX3cuw3y9a6xXD1R42j0BwcW7pT7PD2PX12KRWjX3QNUsRTJ7L36My7h8T6zBIvdaAqnoyDFhTIe4JhvSwdB9ioYMWVtT244RrndILUx0HWncZXtk1S+ltz80/Y1Q3T9LCV9TCZnu84B/EKmXOty8hXre/ENWh2NFG1q3BUUI0VIcp7HI3UrJeTQiBKPosW3n8WX3vub68tp0AjKKgIGvcfsYEBPM1p16aPVVNfkOsjTDOEByfwI3xi6ejnLjqcogLE8= adminer@master"
+
+  - name: add sudoes file for moudir
+    tags: always
+    copy:
+     src: sudoer_moudir
+     dest: /etc/sudoers.d/moudir
+     owner: root
+     group: root
+     mode: 0440
+
