@@ -1,0 +1,55 @@
+- name: installing nano and net-tools and apache2 and php and updating cache on Ubuntu
+  tags: ubuntu,apache,nano,php,net-tools
+  apt:
+      name:
+        - nano
+        - net-tools
+        - apache2
+        - libapache2-mod-php
+      state: latest
+  when: ansible_distribution in ["Ubuntu","Debian"]
+
+
+- name: install apache2 and php and nano and net-tools packages on AlmaLinux
+  tags: almalinux,apache,php,net-tools,nano
+  dnf:
+    name:
+        - httpd
+        - php
+        - nano
+        - net-tools
+    state: latest
+  when: ansible_distribution == "AlmaLinux"
+
+- name: start httpd (AlmaLinux)
+  tags: apache,almalinux,httpd
+  service:
+      name: httpd
+      state: started
+      enabled: yes
+  when: ansible_distribution == "AlmaLinux"
+
+- name: change email address for admin
+  tags: apache,httpd,AlmaLinux
+  lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regex: '^ServerAdmin'
+      line: ServerAdmin somebody@moudir.com
+  when: ansible_distribution == "AlmaLinux"
+  register: httpd
+#register is a variable where we saved the play
+- name: restart httpd (AlmaLinux)
+  tags: apache,AlmaLinux,httpd
+  service:
+      name: httpd
+      state: restarted
+  when: httpd.changed
+
+- name: copy default html file for site
+  tags: apache,php,httpd
+  copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644

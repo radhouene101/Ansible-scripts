@@ -1,0 +1,5 @@
+  - name: installing samba on (File_Servers)
+    tags: samba
+    package:
+      name: samba
+      state: latest
