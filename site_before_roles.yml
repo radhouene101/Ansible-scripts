@@ -1,0 +1,134 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: update repo cache (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+  - name: update repo cache (AlmaLinux)
+    tags: always
+    dnf:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "AlmaLinux"
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: add ssh key for moudir
+    tags: always
+    authorized_key:
+         user: moudir
+         key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCoAY4MOVeABgzCzTHLyOCAXjFhQwzb+GxoHpPxrQn4U1495Y4TkmFbZPIVzCMoz7g3uf9U2UJmvpllDTxngG5e69X1dtCZM9M7NlvTnOSck1SFygag5ffysQ60HwuQerR7VXpYG+3tWeP/WNDpRZTyEl2e27DzrYmXU/alH0tknvLeTuMhld6UjLC9VA5qzlXGKC96tGcc20+SMQi/xARBwuSWesSiU7vGERAD6ntdpmGDjJmwzQuw7qJvd2IIX3cuw3y9a6xXD1R42j0BwcW7pT7PD2PX12KRWjX3QNUsRTJ7L36My7h8T6zBIvdaAqnoyDFhTIe4JhvSwdB9ioYMWVtT244RrndILUx0HWncZXtk1S+ltz80/Y1Q3T9LCV9TCZnu84B/EKmXOty8hXre/ENWh2NFG1q3BUUI0VIcp7HI3UrJeTQiBKPosW3n8WX3vub68tp0AjKKgIGvcfsYEBPM1p16aPVVNfkOsjTDOEByfwI3xi6ejnLjqcogLE8= adminer@master"
+
+
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: installing nano and net-tools and apache2 and php and updating cache on Ubuntu
+    tags: ubuntu,apache,nano,php,net-tools
+    apt:
+      name:
+        - nano
+        - net-tools
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution in ["Ubuntu","Debian"]
+
+
+  - name: install apache2 and php and nano and net-tools packages on AlmaLinux
+    tags: almalinux,apache,php,net-tools,nano
+    dnf:
+      name:
+        - httpd
+        - php
+        - nano
+        - net-tools
+      state: latest
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: start httpd (AlmaLinux)
+    tags: apache,almalinux,httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: change email address for admin
+    tags: apache,httpd,AlmaLinux
+    lineinfile:
+      path: /etc/httpd/conf/httpd.conf
+      regex: '^ServerAdmin'
+      line: ServerAdmin somebody@moudir.com
+    when: ansible_distribution == "AlmaLinux"
+    register: httpd
+#register is a variable where we saved the play
+  - name: restart httpd (AlmaLinux)
+    tags: apache,AlmaLinux,httpd
+    service:
+      name: httpd
+      state: restarted
+    when: httpd.changed
+
+  - name: copy default html file for site
+    tags: apache,php,httpd
+    copy:
+      src: default_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
+
+- hosts: db_server
+  become: true
+  tasks:
+ 
+  - name: install mariadb package(AlmaLinux)
+    tags: mariadb,almalinux
+    dnf:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "AlmaLinux"
+
+  - name: install mariadb packkage (Ubuntu)
+    tags: mariadb,ubuntu
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: file_servers
+  become: true
+  tasks:
+  - name: installing samba on (File_Servers)
+    tags: samba
+    package:
+      name: samba
+      state: latest
+
+- hosts: workstations
+  become: true
+  tasks:
+  - name: install unzip
+    package:
+     name: unzip
+     state: latest
+  - name: install terraform
+    unarchive:
+     src: https://releases.hashicorp.com/terraform/1.7.4/terraform_1.7.4_linux_amd64.zip
+     dest: /usr/local/bin
+     remote_src: yes
+     mode: 0755
+     owner: root
+     group: root
