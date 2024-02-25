@@ -32,103 +32,21 @@
 
 - hosts: web_servers
   become: true
-  tasks:
-
-  - name: installing nano and net-tools and apache2 and php and updating cache on Ubuntu
-    tags: ubuntu,apache,nano,php,net-tools
-    apt:
-      name:
-        - nano
-        - net-tools
-        - apache2
-        - libapache2-mod-php
-      state: latest
-    when: ansible_distribution in ["Ubuntu","Debian"]
-
-
-  - name: install apache2 and php and nano and net-tools packages on AlmaLinux
-    tags: almalinux,apache,php,net-tools,nano
-    dnf:
-      name:
-        - httpd
-        - php
-        - nano
-        - net-tools
-      state: latest
-    when: ansible_distribution == "AlmaLinux"
-
-  - name: start httpd (AlmaLinux)
-    tags: apache,almalinux,httpd
-    service:
-      name: httpd
-      state: started
-      enabled: yes
-    when: ansible_distribution == "AlmaLinux"
-
-  - name: change email address for admin
-    tags: apache,httpd,AlmaLinux
-    lineinfile:
-      path: /etc/httpd/conf/httpd.conf
-      regex: '^ServerAdmin'
-      line: ServerAdmin somebody@moudir.com
-    when: ansible_distribution == "AlmaLinux"
-    register: httpd
-#register is a variable where we saved the play
-  - name: restart httpd (AlmaLinux)
-    tags: apache,AlmaLinux,httpd
-    service:
-      name: httpd
-      state: restarted
-    when: httpd.changed
-
-  - name: copy default html file for site
-    tags: apache,php,httpd
-    copy:
-      src: default_site.html
-      dest: /var/www/html/index.html
-      owner: root
-      group: root
-      mode: 0644
+  roles:
+   - web_servers
 
 - hosts: db_server
   become: true
-  tasks:
- 
-  - name: install mariadb package(AlmaLinux)
-    tags: mariadb,almalinux
-    dnf:
-      name: mariadb
-      state: latest
-    when: ansible_distribution == "AlmaLinux"
-
-  - name: install mariadb packkage (Ubuntu)
-    tags: mariadb,ubuntu
-    apt:
-      name: mariadb-server
-      state: latest
-    when: ansible_distribution == "Ubuntu"
+  roles:
+   - db_server 
 
 - hosts: file_servers
   become: true
-  tasks:
-  - name: installing samba on (File_Servers)
-    tags: samba
-    package:
-      name: samba
-      state: latest
+  roles:
+    - file_servers
 
 - hosts: workstations
   become: true
-  tasks:
-  - name: install unzip
-    package:
-     name: unzip
-     state: latest
-  - name: install terraform
-    unarchive:
-     src: https://releases.hashicorp.com/terraform/1.7.4/terraform_1.7.4_linux_amd64.zip
-     dest: /usr/local/bin
-     remote_src: yes
-     mode: 0755
-     owner: root
-     group: root
+  roles:
+   - workstations
+
