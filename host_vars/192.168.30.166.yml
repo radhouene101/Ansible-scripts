@@ -3,3 +3,5 @@ apache_service: apache2
 php_package_name: libapache2-mod-php
 nano_package: nano 
 net_tools_package: net-tools
+ssh_users: "moudir adminer"
+ssh_template_file: sshd_config_ubuntu.j2 
