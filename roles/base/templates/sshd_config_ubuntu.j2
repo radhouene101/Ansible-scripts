@@ -10,6 +10,7 @@
 # default value.
 
 Include /etc/ssh/sshd_config.d/*.conf
+#AllowUsers {{ ssh_users }}
 
 #Port 22
 #AddressFamily any
@@ -110,7 +111,6 @@ PrintMotd no
 
 # Allow client to pass locale environment variables
 AcceptEnv LANG LC_*
-AllowUsers {{ ssh_users }}
 # override default of no subsystems
 Subsystem	sftp	/usr/lib/openssh/sftp-server
 
