@@ -2,7 +2,7 @@
 - hosts: all
   become: true
   pre_tasks:
-
+#my com
   - name: update repo cache (Ubuntu)
     tags: always
     apt:
